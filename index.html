@@ -4,48 +4,99 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Most Followed AI Topics</title>
-<meta name="description" content="The AI topics people follow and watch the most.">
+<meta name="description" content="The AI topics people follow and watch the most, with top ideas and interest levels.">
 <style>
-  :root { --bg:#0f1117; --fg:#e8eaf0; --muted:#9aa1b2; --card:#181b24; --accent:#7c9cff; --border:#262a36; }
+  :root { --bg:#0f1117; --fg:#e8eaf0; --muted:#9aa1b2; --card:#181b24; --accent:#7c9cff; --accent2:#b28cff; --border:#262a36; --track:#262a36; }
   @media (prefers-color-scheme: light) {
-    :root { --bg:#f6f7fb; --fg:#161922; --muted:#5a6173; --card:#fff; --accent:#3b5bdb; --border:#e1e4ee; }
+    :root { --bg:#f6f7fb; --fg:#161922; --muted:#5a6173; --card:#fff; --accent:#3b5bdb; --accent2:#7048e8; --border:#e1e4ee; --track:#e6e9f2; }
   }
-  * { box-sizing: border-box; }
+  * { box-sizing:border-box; }
   body { margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--fg); }
-  main { max-width:960px; margin:0 auto; padding:48px 16px; }
+  main { max-width:1040px; margin:0 auto; padding:48px 16px; }
   h1 { font-size:2rem; margin:0 0 8px; }
-  .sub { color:var(--muted); margin:0 0 32px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; list-style:none; padding:0; margin:0; counter-reset:t; }
-  .grid li { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; counter-increment:t; }
-  .grid li::before { content:counter(t, decimal-leading-zero); color:var(--accent); font-weight:700; font-size:.85rem; }
-  .grid h2 { font-size:1.1rem; margin:4px 0 6px; }
-  .grid p { margin:0; color:var(--muted); font-size:.95rem; }
-  footer { margin-top:40px; color:var(--muted); font-size:.95rem; }
+  h2.sec { font-size:1.2rem; margin:40px 0 12px; }
+  .sub { color:var(--muted); margin:0 0 24px; }
+  .note { color:var(--muted); font-size:.85rem; margin:8px 0 0; }
   a { color:var(--accent); }
+  .panel { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; }
+  .row { display:grid; grid-template-columns:minmax(120px,220px) 1fr 36px; gap:10px; align-items:center; margin:6px 0; font-size:.92rem; }
+  .row .lbl { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .track { background:var(--track); border-radius:99px; height:10px; overflow:hidden; }
+  .bar { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+  .val { text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; list-style:none; padding:0; margin:0; }
+  .card h3 { font-size:1.1rem; margin:0 0 4px; }
+  .card .desc { margin:0 0 10px; color:var(--muted); font-size:.92rem; }
+  .card ol { margin:0 0 12px; padding-left:20px; font-size:.93rem; }
+  .card li { margin:3px 0; }
+  .meta { display:flex; justify-content:space-between; gap:8px; align-items:center; font-size:.82rem; color:var(--muted); }
+  .meta .track { flex:1; }
+  footer { margin-top:40px; color:var(--muted); font-size:.95rem; }
 </style>
 </head>
 <body>
 <main>
-  <h1>Most Followed AI Topics</h1>
-  <p class="sub">What people keep up with and watch the most in AI.</p>
-  <ol class="grid">
-    <li><h2>Large Language Models</h2><p>New releases and benchmarks from OpenAI, Anthropic, Google, Meta, Mistral and DeepSeek.</p></li>
-    <li><h2>AI Agents</h2><p>Autonomous tools that plan, use software and finish multi-step tasks.</p></li>
-    <li><h2>AI Coding Assistants</h2><p>Claude Code, Copilot, Cursor and vibe coding.</p></li>
-    <li><h2>Generative Image &amp; Video</h2><p>Midjourney, Sora, Veo, Runway, Flux and Stable Diffusion.</p></li>
-    <li><h2>Open-Source Models</h2><p>Llama, Qwen, Mistral, DeepSeek and running models locally.</p></li>
-    <li><h2>AI Jobs &amp; Future of Work</h2><p>Automation, productivity gains and which roles change.</p></li>
-    <li><h2>AI Safety &amp; Alignment</h2><p>Risk, interpretability, evals and the AGI debate.</p></li>
-    <li><h2>Regulation &amp; Policy</h2><p>EU AI Act, US policy, copyright cases and export controls.</p></li>
-    <li><h2>AI Hardware &amp; Chips</h2><p>NVIDIA GPUs, TPUs, data centers and energy demand.</p></li>
-    <li><h2>Prompt Engineering &amp; RAG</h2><p>Prompting, retrieval, fine-tuning and context engineering.</p></li>
-    <li><h2>Robotics &amp; Embodied AI</h2><p>Humanoids, self-driving cars and physical AI.</p></li>
-    <li><h2>AI in Science &amp; Health</h2><p>Protein folding, drug discovery and medical imaging.</p></li>
-    <li><h2>AI Startups &amp; Funding</h2><p>Valuations, big-tech investment and the bubble question.</p></li>
-    <li><h2>Deepfakes &amp; Misinformation</h2><p>Synthetic media, voice cloning and detection.</p></li>
-    <li><h2>AI in Education</h2><p>Tutoring, cheating concerns and learning with AI.</p></li>
-  </ol>
-  <footer>See the <a href="https://github.com/rifaterdemsahin/99percentTopicsAI/blob/main/README.md">README.md</a> for details.</footer>
+  <h1>🤖 Most Followed AI Topics</h1>
+  <p class="sub">What people keep up with and watch in AI — with 3 top ideas to follow in each.</p>
+
+  <h2 class="sec">📊 Interest around each topic</h2>
+  <div class="panel">
+    <div id="chart"></div>
+    <p class="note">Interest is an <strong>editorial estimate</strong> (0–100, relative), not measured data. For live numbers, use the 📈 Trends link on each card.</p>
+  </div>
+
+  <h2 class="sec">🔥 Topics &amp; top ideas</h2>
+  <ul class="grid" id="cards"></ul>
+
+  <footer>📄 See the <a href="https://github.com/rifaterdemsahin/99percentTopicsAI/blob/main/README.md">README.md</a> for details.</footer>
 </main>
+
+<script>
+const topics = [
+  { e:"🧠", n:"Large Language Models", s:96, d:"New releases and benchmarks from the big labs.",
+    i:["Frontier model launches and leaderboards","Reasoning models that think before answering","Smaller, cheaper models that rival big ones"] },
+  { e:"🦾", n:"AI Agents", s:94, d:"Software that plans, uses tools and finishes tasks.",
+    i:["Computer-use and browser agents","Multi-agent workflows","MCP and tool-connected assistants"] },
+  { e:"💻", n:"AI Coding Assistants", s:92, d:"Writing and shipping code with AI.",
+    i:["Agentic coding in the terminal and IDE","Vibe coding for non-developers","AI code review and testing"] },
+  { e:"🎨", n:"Generative Image & Video", s:88, d:"Text-to-image, text-to-video and editing.",
+    i:["Realistic text-to-video","Consistent characters across scenes","AI-assisted filmmaking and design"] },
+  { e:"🔓", n:"Open-Source Models", s:82, d:"Open weights you can run and tweak yourself.",
+    i:["Running models locally on laptops","Open vs closed model gap","Fine-tuning for your own data"] },
+  { e:"💼", n:"AI Jobs & Future of Work", s:85, d:"How AI changes roles and productivity.",
+    i:["Which jobs are most affected","Upskilling and new AI roles","Productivity gains for solo founders"] },
+  { e:"🛡️", n:"AI Safety & Alignment", s:70, d:"Making powerful AI behave as intended.",
+    i:["Interpretability research","Evals and red-teaming","The AGI timeline debate"] },
+  { e:"⚖️", n:"Regulation & Policy", s:72, d:"Laws, courts and government rules.",
+    i:["EU AI Act implementation","Copyright lawsuits over training data","Chip export controls"] },
+  { e:"🔌", n:"AI Hardware & Chips", s:80, d:"The compute behind the boom.",
+    i:["GPU and custom chip competition","Data center and energy demand","On-device AI chips"] },
+  { e:"✍️", n:"Prompting & RAG", s:75, d:"Getting better results from models.",
+    i:["Context engineering","Retrieval-augmented generation","Evaluating and fine-tuning prompts"] },
+  { e:"🤝", n:"Robotics & Embodied AI", s:68, d:"AI in the physical world.",
+    i:["Humanoid robots","Self-driving vehicles","Robot learning from video"] },
+  { e:"🧬", n:"AI in Science & Health", s:66, d:"Discovery and medicine accelerated by AI.",
+    i:["Protein and drug discovery","Medical imaging and diagnosis","AI research assistants for scientists"] },
+  { e:"💰", n:"AI Startups & Funding", s:74, d:"Money, valuations and market bets.",
+    i:["Mega funding rounds","Is there an AI bubble?","Big-tech acquisitions and partnerships"] },
+  { e:"🎭", n:"Deepfakes & Misinformation", s:62, d:"Synthetic media and how to spot it.",
+    i:["Voice cloning scams","Detection and watermarking","Election and news integrity"] },
+  { e:"🎓", n:"AI in Education", s:64, d:"Learning, teaching and cheating with AI.",
+    i:["Personal AI tutors","Rules for AI use in schools","Teaching AI literacy"] }
+].sort((a,b)=>b.s-a.s);
+
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const trends = n => "https://trends.google.com/trends/explore?q=" + encodeURIComponent(n.replace(/&/g,"and"));
+
+document.getElementById("chart").innerHTML = topics.map(t =>
+  `<div class="row"><span class="lbl">${t.e} ${esc(t.n)}</span><div class="track"><div class="bar" style="width:${t.s}%"></div></div><span class="val">${t.s}</span></div>`
+).join("");
+
+document.getElementById("cards").innerHTML = topics.map(t =>
+  `<li class="panel card"><h3>${t.e} ${esc(t.n)}</h3><p class="desc">${esc(t.d)}</p>
+   <ol>${t.i.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
+   <div class="meta"><span>Interest ${t.s}</span><div class="track"><div class="bar" style="width:${t.s}%"></div></div><a href="${trends(t.n)}" target="_blank" rel="noopener">📈 Trends</a></div></li>`
+).join("");
+</script>
 </body>
 </html>
