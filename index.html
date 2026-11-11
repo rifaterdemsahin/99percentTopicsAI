@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Most Followed AI Topics</title>
+<meta name="description" content="The AI topics people follow and watch the most.">
+<style>
+  :root { --bg:#0f1117; --fg:#e8eaf0; --muted:#9aa1b2; --card:#181b24; --accent:#7c9cff; --border:#262a36; }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#f6f7fb; --fg:#161922; --muted:#5a6173; --card:#fff; --accent:#3b5bdb; --border:#e1e4ee; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--fg); }
+  main { max-width:960px; margin:0 auto; padding:48px 16px; }
+  h1 { font-size:2rem; margin:0 0 8px; }
+  .sub { color:var(--muted); margin:0 0 32px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; list-style:none; padding:0; margin:0; counter-reset:t; }
+  .grid li { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; counter-increment:t; }
+  .grid li::before { content:counter(t, decimal-leading-zero); color:var(--accent); font-weight:700; font-size:.85rem; }
+  .grid h2 { font-size:1.1rem; margin:4px 0 6px; }
+  .grid p { margin:0; color:var(--muted); font-size:.95rem; }
+  footer { margin-top:40px; color:var(--muted); font-size:.95rem; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Most Followed AI Topics</h1>
+  <p class="sub">What people keep up with and watch the most in AI.</p>
+  <ol class="grid">
+    <li><h2>Large Language Models</h2><p>New releases and benchmarks from OpenAI, Anthropic, Google, Meta, Mistral and DeepSeek.</p></li>
+    <li><h2>AI Agents</h2><p>Autonomous tools that plan, use software and finish multi-step tasks.</p></li>
+    <li><h2>AI Coding Assistants</h2><p>Claude Code, Copilot, Cursor and vibe coding.</p></li>
+    <li><h2>Generative Image &amp; Video</h2><p>Midjourney, Sora, Veo, Runway, Flux and Stable Diffusion.</p></li>
+    <li><h2>Open-Source Models</h2><p>Llama, Qwen, Mistral, DeepSeek and running models locally.</p></li>
+    <li><h2>AI Jobs &amp; Future of Work</h2><p>Automation, productivity gains and which roles change.</p></li>
+    <li><h2>AI Safety &amp; Alignment</h2><p>Risk, interpretability, evals and the AGI debate.</p></li>
+    <li><h2>Regulation &amp; Policy</h2><p>EU AI Act, US policy, copyright cases and export controls.</p></li>
+    <li><h2>AI Hardware &amp; Chips</h2><p>NVIDIA GPUs, TPUs, data centers and energy demand.</p></li>
+    <li><h2>Prompt Engineering &amp; RAG</h2><p>Prompting, retrieval, fine-tuning and context engineering.</p></li>
+    <li><h2>Robotics &amp; Embodied AI</h2><p>Humanoids, self-driving cars and physical AI.</p></li>
+    <li><h2>AI in Science &amp; Health</h2><p>Protein folding, drug discovery and medical imaging.</p></li>
+    <li><h2>AI Startups &amp; Funding</h2><p>Valuations, big-tech investment and the bubble question.</p></li>
+    <li><h2>Deepfakes &amp; Misinformation</h2><p>Synthetic media, voice cloning and detection.</p></li>
+    <li><h2>AI in Education</h2><p>Tutoring, cheating concerns and learning with AI.</p></li>
+  </ol>
+  <footer>See the <a href="https://github.com/rifaterdemsahin/99percentTopicsAI/blob/main/README.md">README.md</a> for details.</footer>
+</main>
+</body>
+</html>
