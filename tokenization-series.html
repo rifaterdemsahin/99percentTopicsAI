@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM Video Series: How LLMs Read (Tokenization) + 16 High-Potential Follow-Ups</title>
+<meta name="description" content="In-depth breakdown of 'How LLMs Actually Read: Tokenization Explained' with 16 high-retention, complementary short-form video ideas for AI creators.">
+<style>
+  :root {
+    --bg: #0b0d13;
+    --card: #151823;
+    --card-hover: #1c2130;
+    --fg: #eef1f8;
+    --muted: #9aa1b2;
+    --subtle: #62697d;
+    --border: #23293a;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --accent2: #ec4899;
+    --accent3: #10b981;
+    --badge-bg: rgba(99, 102, 241, 0.15);
+    --badge-border: rgba(99, 102, 241, 0.35);
+    --chip-bg: rgba(236, 72, 153, 0.12);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --card-hover: #f1f5f9;
+      --fg: #0f172a;
+      --muted: #475569;
+      --subtle: #94a3b8;
+      --border: #e2e8f0;
+      --accent: #4f46e5;
+      --accent-light: #6366f1;
+      --accent2: #db2777;
+      --accent3: #059669;
+      --badge-bg: rgba(79, 70, 229, 0.08);
+      --badge-border: rgba(79, 70, 229, 0.25);
+      --chip-bg: rgba(219, 39, 119, 0.08);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+  }
+  a { color: var(--accent-light); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  header.nav {
+    border-bottom: 1px solid var(--border);
+    background: rgba(11, 13, 19, 0.85);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  @media (prefers-color-scheme: light) {
+    header.nav { background: rgba(255, 255, 255, 0.9); }
+  }
+  .nav-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--fg);
+  }
+  .nav-links {
+    display: flex;
+    gap: 16px;
+    font-size: 0.92rem;
+  }
+
+  main {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 36px 20px 80px;
+  }
+
+  /* Breadcrumbs */
+  .crumb {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  /* Hero Section */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 36px;
+    align-items: center;
+    margin-bottom: 54px;
+    background: linear-gradient(145deg, rgba(99,102,241,0.08), rgba(236,72,153,0.05));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+  }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; gap: 28px; padding: 22px; }
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+    line-height: 1.25;
+    margin: 12px 0 16px;
+    letter-spacing: -0.02em;
+  }
+  .tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--badge-bg);
+    border: 1px solid var(--badge-border);
+    color: var(--accent-light);
+  }
+  .hero-p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin: 0 0 24px;
+  }
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.94rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn:hover {
+    background: var(--accent-light);
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--fg);
+  }
+  .btn-outline:hover {
+    background: var(--card-hover);
+    border-color: var(--muted);
+  }
+
+  /* Video player wrapper */
+  .player-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .video-frame {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 9/16;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    border: 2px solid var(--border);
+    background: #000;
+  }
+  .video-frame iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+  .player-caption {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* Section styles */
+  .section-title {
+    font-size: 1.6rem;
+    margin: 48px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-desc {
+    color: var(--muted);
+    margin: 0 0 24px;
+    font-size: 1rem;
+    max-width: 780px;
+  }
+
+  /* Video Breakdown Cards */
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .mini-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .mini-card h4 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent-light);
+  }
+  .mini-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  /* Interactive Tokenizer Simulation */
+  .simulator {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 48px;
+  }
+  .sim-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--fg);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+  .sim-tokens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+  }
+  .token-chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--card-hover);
+    border: 1px solid var(--border);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.88rem;
+  }
+  .token-id {
+    font-size: 0.72rem;
+    color: var(--accent-light);
+    margin-top: 2px;
+  }
+  .sim-stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 14px;
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+
+  /* Filters */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .filter-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .search-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--fg);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    min-width: 220px;
+  }
+
+  /* Ideas Grid */
+  .ideas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .idea-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .idea-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-light);
+    background: var(--card-hover);
+  }
+  .idea-top {
+    margin-bottom: 16px;
+  }
+  .idea-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .day-badge {
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: var(--badge-bg);
+    color: var(--accent-light);
+    border: 1px solid var(--badge-border);
+  }
+  .pillar-badge {
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+  .idea-title {
+    font-size: 1.15rem;
+    line-height: 1.35;
+    margin: 0 0 10px;
+    color: var(--fg);
+  }
+  .idea-hook {
+    font-size: 0.92rem;
+    color: #f43f5e;
+    background: rgba(244, 63, 94, 0.08);
+    border-left: 3px solid #f43f5e;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    margin: 10px 0 14px;
+    font-style: italic;
+  }
+  .idea-section-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: var(--subtle);
+    margin-top: 14px;
+    margin-bottom: 4px;
+  }
+  .idea-visual {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0 0 10px;
+  }
+  .scene-list {
+    margin: 6px 0 14px;
+    padding-left: 18px;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  .scene-list li {
+    margin-bottom: 4px;
+  }
+  .token-tie {
+    font-size: 0.86rem;
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px dashed var(--badge-border);
+    border-radius: 8px;
+    padding: 10px;
+    color: var(--fg);
+    margin-top: 12px;
+  }
+  .token-tie strong {
+    color: var(--accent-light);
+  }
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 16px;
+    font-size: 0.84rem;
+  }
+  .rewatch-score {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #10b981;
+    font-weight: 600;
+  }
+  .copy-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  .copy-btn:hover {
+    color: var(--fg);
+    border-color: var(--muted);
+  }
+
+  /* Strategy Playbook */
+  .playbook {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 48px;
+  }
+  .formula-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .formula-step {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .step-time {
+    font-weight: 700;
+    color: var(--accent-light);
+    font-size: 0.82rem;
+  }
+  .formula-step h5 {
+    margin: 6px 0;
+    font-size: 0.96rem;
+  }
+  .formula-step p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.92rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">🤖 <span>99percentTopicsAI</span></a>
+    <div class="nav-links">
+      <a href="index.html">← All Topics</a>
+      <a href="https://www.youtube.com/@RifatErdemSahin" target="_blank" rel="noopener">YouTube Channel</a>
+      <a href="https://github.com/rifaterdemsahin/99percentTopicsAI" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="crumb">
+    <a href="index.html">Home</a> &gt; <span>Large Language Models</span> &gt; <strong>Tokenization Video &amp; 16 High-Potential Follow-Ups</strong>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div>
+      <span class="tag-badge">🔥 High-Retention Video Deconstructed</span>
+      <h1>How LLMs Actually Read: Tokenization Explained</h1>
+      <p class="hero-p">
+        A deep-dive on the viral 47-second Short breaking down how Large Language Models ingest language as numbers, why token boundaries dictate AI behavior, and the 16 complementary video ideas designed with the same high-retention formula.
+      </p>
+      <div class="hero-meta">
+        <a href="https://www.youtube.com/shorts/KVKJRdkH-B8" target="_blank" rel="noopener" class="btn">▶️ Watch on YouTube</a>
+        <a href="#simulator" class="btn btn-outline">🔤 Interactive Tokenizer</a>
+        <a href="#ideas" class="btn btn-outline">💡 16 Follow-Up Ideas</a>
+      </div>
+    </div>
+    <div class="player-box">
+      <div class="video-frame">
+        <iframe
+          src="https://www.youtube.com/embed/KVKJRdkH-B8"
+          title="How LLMs Actually Read: Tokenization Explained"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <p class="player-caption">Original 47s YouTube Short by <a href="https://www.youtube.com/@RifatErdemSahin" target="_blank" rel="noopener">@RifatErdemSahin</a></p>
+    </div>
+  </section>
+
+  <!-- RETENTION AUTOPSY -->
+  <h2 class="section-title">🔍 Why This Video Works &amp; Gets Rewatched</h2>
+  <p class="section-desc">
+    Analyzing the anatomy of <em>"How LLMs Actually Read: Tokenization Explained"</em> to understand what triggers viewer retention, shares, and repeat watches.
+  </p>
+  <div class="breakdown-grid">
+    <div class="mini-card">
+      <h4>⚡ 0–3s: Counter-Intuitive Hook</h4>
+      <p><em>"LLMs don't read words like humans do."</em> Shatters the default assumption in 3 seconds. Viewers immediately want to know <em>how</em> it actually works.</p>
+    </div>
+    <div class="mini-card">
+      <h4>🧩 Scene 1–2: Visual Number Matrix</h4>
+      <p>Instantly maps words into numerical IDs (e.g., <code>"cat" &rarr; 9246</code>). Replaces abstract math with visual puzzle pieces.</p>
+    </div>
+    <div class="mini-card">
+      <h4>✂️ Scene 3–5: The Subword Aha Moment</h4>
+      <p>Demonstrates BPE (Byte-Pair Encoding). Shows why rare words get fractured into syllables, explaining why ChatGPT miscounts or misinterprets.</p>
+    </div>
+    <div class="mini-card">
+      <h4>💰 Scene 6–8: Practical Currency &amp; Loop</h4>
+      <p>Framing tokens as "Context Window Budget" gives actionable intuition for API bills and prompt engineering. Ends with high-intent <em>"Subscribe for Day 2!"</em></p>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE TOKENIZER SIMULATOR -->
+  <section class="simulator" id="simulator">
+    <h3 style="margin-top:0; font-size:1.25rem;">🧪 Live Tokenization Simulator</h3>
+    <p style="margin:0 0 12px; color:var(--muted); font-size:0.92rem;">
+      Try typing phrases below to see how a model segments text into tokens and assigns token IDs, mirroring the Short's visual explanation:
+    </p>
+    <label for="sampleText" style="font-size:0.85rem; font-weight:600; color:var(--muted);">Enter test phrase:</label>
+    <input type="text" id="sampleText" class="sim-input" value="strawberry tokenization context window 12345" />
+
+    <div class="sim-tokens" id="tokenOutput"></div>
+
+    <div class="sim-stats">
+      <span>Total Characters: <strong id="charCount">0</strong></span>
+      <span>Estimated Tokens: <strong id="tokenCount">0</strong></span>
+      <span>Token/Char Ratio: <strong id="ratio">~0.0</strong></span>
+    </div>
+  </section>
+
+  <!-- 16 COMPLEMENTARY VIDEO IDEAS -->
+  <h2 class="section-title" id="ideas">🚀 16 High-Potential Complementary Video Ideas</h2>
+  <p class="section-desc">
+    These 16 concepts directly build upon the Tokenization video (Days 2 through 17). Each is engineered with the exact same high-retention mechanics: visual mental models, paradox hooks, dense pacing, and high rewatch probability.
+  </p>
+
+  <div class="filter-bar">
+    <div class="filter-chips">
+      <button class="filter-btn active" data-filter="all">All (16)</button>
+      <button class="filter-btn" data-filter="core">Model Internals</button>
+      <button class="filter-btn" data-filter="quirks">LLM Quirks &amp; Paradoxes</button>
+      <button class="filter-btn" data-filter="practical">Dev &amp; Cost Efficiency</button>
+      <button class="filter-btn" data-filter="future">Agents &amp; Next-Gen</button>
+    </div>
+    <input type="text" id="searchIdeas" class="search-box" placeholder="Search ideas (e.g., strawberry, cache)..." />
+  </div>
+
+  <ul class="ideas-grid" id="ideasGrid"></ul>
+
+  <!-- STRATEGY PLAYBOOK -->
+  <section class="playbook">
+    <h3 style="margin-top:0; font-size:1.3rem;">📋 The Short-Form AI Retention Formula</h3>
+    <p style="color:var(--muted); font-size:0.95rem; margin-bottom:16px;">
+      The 5-part structure used across this 17-part curriculum to guarantee 80%+ average view duration (AVD) and high rewatch rates:
+    </p>
+    <div class="formula-grid">
+      <div class="formula-step">
+        <span class="step-time">0:00 – 0:04</span>
+        <h5>1. The Paradox Hook</h5>
+        <p>Show a paradox or failure case (e.g. counting letters, memory slowdown, price differences) that contradicts common sense.</p>
+      </div>
+      <div class="formula-step">
+        <span class="step-time">0:04 – 0:18</span>
+        <h5>2. The Under-The-Hood Visual</h5>
+        <p>Strip the UI away. Show the token stream, embedding vectors, or attention matrices using 2D/3D animated motion.</p>
+      </div>
+      <div class="formula-step">
+        <span class="step-time">0:18 – 0:34</span>
+        <h5>3. The "Aha!" Mechanism</h5>
+        <p>Explain <em>why</em> the math or architecture causes the behavior in one crystal-clear sentence.</p>
+      </div>
+      <div class="formula-step">
+        <span class="step-time">0:34 – 0:42</span>
+        <h5>4. The Builder Rule-of-Thumb</h5>
+        <p>Give the viewer actionable advice: how to prompt, how to choose parameters, or how to save money on tokens.</p>
+      </div>
+      <div class="formula-step">
+        <span class="step-time">0:42 – 0:47</span>
+        <h5>5. The Series Loop Hook</h5>
+        <p>Tease the next episode: <em>"In Day 3, we look at why..."</em>, creating continuous binge-watching behavior.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Crafted for <a href="https://www.youtube.com/@RifatErdemSahin" target="_blank" rel="noopener">Rifat Erdem Sahin's AI Channel</a> &bull; Project: <code>99percentTopicsAI</code></div>
+    <div><a href="index.html">← Back to Overview</a> &bull; <a href="https://github.com/rifaterdemsahin/99percentTopicsAI" target="_blank" rel="noopener">GitHub Repository</a></div>
+  </footer>
+</main>
+
+<script>
+// 16 Detailed Video Ideas
+const ideas = [
+  {
+    day: "Day 2",
+    category: "core",
+    title: "From Numbers to Meaning: High-Dimensional Embeddings",
+    hook: "Tokens are just numbers. How does an AI know that 'king' minus 'man' plus 'woman' equals 'queen'?",
+    visual: "3D vector space floating in dark space. Word coordinates shifting live as vector arithmetic (+/-) pulls vectors toward 'Queen'.",
+    scenes: [
+      "Scene 1: Token ID 9246 gets passed into a lookup table",
+      "Scene 2: Expanding from 1 integer to 1,536 coordinates",
+      "Scene 3: Semantic clustering: Fruit cluster vs Royalty cluster",
+      "Scene 4: The King - Man + Woman = Queen vector math live",
+      "Scene 5: Teaser: How do these vectors talk to each other?"
+    ],
+    tokenTie: "Direct sequel to Day 1: Maps token IDs into geometric space.",
+    rewatch: "98% (Dense 3D vector math visual)",
+    tag: "Embeddings, Vectors, LatentSpace"
+  },
+  {
+    day: "Day 3",
+    category: "quirks",
+    title: "The Strawberry Paradox: Why LLMs Can't Count Letters",
+    hook: "Ask ChatGPT how many 'r's are in 'strawberry' and it often insists there are only two. Is AI stupid?",
+    visual: "Splitting the word 'strawberry' into chunks: ['straw', 'berry']. Letters 's-t-r-a-w-b-e-r-r-y' never exist to the AI!",
+    scenes: [
+      "Scene 1: ChatGPT failing the strawberry test",
+      "Scene 2: Tokenizer view: ['straw', 'berry'] as two opaque tokens",
+      "Scene 3: Explaining that the model never sees raw characters",
+      "Scene 4: The workaround: Asking it to spell with dashes (s-t-r)",
+      "Scene 5: Why future tokenizers or character-level models will fix this"
+    ],
+    tokenTie: "Direct consequence of BPE token chunking from the Day 1 video.",
+    rewatch: "99% (Viewers test it immediately on their phones)",
+    tag: "Strawberry, BPE, LLMQuirks"
+  },
+  {
+    day: "Day 4",
+    category: "core",
+    title: "Self-Attention in 45s: How Words Talk to Each Other",
+    hook: "In the sentence 'The bank of the river', how does AI know 'bank' isn't where you deposit cash?",
+    visual: "Glowing laser beams connecting 'bank' to 'river' with heavy 0.92 weight, vs dim 0.05 beam to 'deposit'.",
+    scenes: [
+      "Scene 1: The ambiguity of homonyms in static embeddings",
+      "Scene 2: Query, Key, and Value (Q, K, V) explained as a library search",
+      "Scene 3: Softmax attention heatmap lighting up contextual tokens",
+      "Scene 4: The transformed token vector now carries 'river' context",
+      "Scene 5: Multi-head attention: multiple lenses looking simultaneously"
+    ],
+    tokenTie: "Contextualizes raw token embeddings created in Day 1 and 2.",
+    rewatch: "96% (Attention matrix animations invite pause-and-study)",
+    tag: "SelfAttention, Transformers, DeepLearning"
+  },
+  {
+    day: "Day 5",
+    category: "core",
+    title: "The Temperature Slider: Why 0 is a Robot and 1.2 is Crazy",
+    hook: "Ever wonder what the 'Temperature' slider actually does? It is not warmth—it is pure probability distortion.",
+    visual: "Dynamic probability histogram of candidate next tokens. Sliding temperature from 0.0 to 1.5 flattens or sharpens the distribution.",
+    scenes: [
+      "Scene 1: The model predicts next token probabilities [the: 60%, a: 30%, frog: 0.1%]",
+      "Scene 2: Temp = 0 (Greedy Search): Always picks 60%",
+      "Scene 3: Temp = 0.7: Natural human-like balance",
+      "Scene 4: Temp = 1.5: Flattens probabilities into wild hallucinations",
+      "Scene 5: Practical rule: Use 0 for code/SQL, 0.7 for writing"
+    ],
+    tokenTie: "Controls which next-token ID gets selected from the vocabulary.",
+    rewatch: "95% (Actionable advice for every ChatGPT/API user)",
+    tag: "Temperature, Probability, LLMParameters"
+  },
+  {
+    day: "Day 6",
+    category: "practical",
+    title: "KV Cache: Why Chatbots Slow Down on Message 50",
+    hook: "Notice how an AI responds instantly on message 1, but lags on message 50? Meet the KV Cache.",
+    visual: "GPU VRAM bar graph filling up red. Showing previous tokens being recomputed every single turn if not cached.",
+    scenes: [
+      "Scene 1: Auto-regressive generation generating 1 token at a time",
+      "Scene 2: Why re-calculating all previous tokens is O(N^2) quadratic pain",
+      "Scene 3: Saving Key & Value vectors in high-speed GPU memory",
+      "Scene 4: The memory wall: Why 128k context eats 10GB+ of VRAM",
+      "Scene 5: How vLLM and PagedAttention made AI 10x faster"
+    ],
+    tokenTie: "Directly relates to the Context Window Budget scene in Day 1.",
+    rewatch: "94% (High tech-enthusiast & developer appeal)",
+    tag: "KVCache, vLLM, GPUMemory"
+  },
+  {
+    day: "Day 7",
+    category: "quirks",
+    title: "The Token Tax: Why Other Languages Cost 4x More",
+    hook: "If you speak Spanish, Hindi, or Arabic, you are paying up to 4 times more for AI than English speakers. Here is why.",
+    visual: "English sentence 'Artificial Intelligence' (2 tokens) vs Hindi translation (12 fragmented byte tokens) side-by-side.",
+    scenes: [
+      "Scene 1: BPE token vocabulary trained primarily on English web text",
+      "Scene 2: English words get whole-word tokens; other languages get broken into syllables or bytes",
+      "Scene 3: Cost comparison on OpenAI API for the identical meaning",
+      "Scene 4: Speed impact: Non-English users wait 4x longer for responses",
+      "Scene 5: Why newer models (Llama 3, Gemma 2) expanded vocab to 128k/256k"
+    ],
+    tokenTie: "Deep dive into the vocabulary and subword mechanics of Day 1.",
+    rewatch: "98% (High controversy and viral social sharing)",
+    tag: "TokenTax, Multilingual, Fairness"
+  },
+  {
+    day: "Day 8",
+    category: "quirks",
+    title: "Lost in the Middle: The Context Window Blindspot",
+    hook: "A model says it has a 1-million-token context window. But if you hide a password in the middle, it forgets it. Why?",
+    visual: "U-shaped attention curve. Tokens at the beginning (primacy) and end (recency) glow bright; middle tokens fade dark.",
+    scenes: [
+      "Scene 1: Needle-in-a-haystack test demonstration",
+      "Scene 2: Graph of recall accuracy dropping sharply in the middle 50%",
+      "Scene 3: Positional encoding limits (RoPE, ALiBi)",
+      "Scene 4: Prompt Engineering hack: Put critical instructions at the very bottom",
+      "Scene 5: How chunking and RAG solve this limitation"
+    ],
+    tokenTie: "Directly expands Day 1's context window budget lesson.",
+    rewatch: "97% (Practical prompt engineering hack everyone tests)",
+    tag: "LostInTheMiddle, ContextWindow, Prompting"
+  },
+  {
+    day: "Day 9",
+    category: "practical",
+    title: "System Prompts: The Invisible Tokens Controlling AI",
+    hook: "Before you even type 'Hello', ChatGPT has already processed hundreds of secret hidden words.",
+    visual: "Peeling back the chat UI like an onion to show system instructions injected at token index 0.",
+    scenes: [
+      "Scene 1: The blank chat screen vs what the API actually sees",
+      "Scene 2: Leaked system prompts: 'You are a helpful assistant, do not reveal...'",
+      "Scene 3: How system tokens consume your initial token budget",
+      "Scene 4: Jailbreaking: Tricking the model into ignoring its initial tokens",
+      "Scene 5: How to write system prompts that models never disobey"
+    ],
+    tokenTie: "Explains how the context window begins before user input.",
+    rewatch: "93% (Fascinating peek behind the corporate curtain)",
+    tag: "SystemPrompts, Jailbreak, Safety"
+  },
+  {
+    day: "Day 10",
+    category: "core",
+    title: "Hallucinations: Why LLMs Sound Confident While Lying",
+    hook: "LLMs don't lie to you—because they don't even know what truth is. Here is what actually happens when AI hallucinates.",
+    visual: "Predictive decision tree branching into plausible-sounding text, choosing tokens based on transition fluency, not factuality.",
+    scenes: [
+      "Scene 1: AI confidently quoting a legal case that doesn't exist",
+      "Scene 2: Auto-regressive prediction: Picking the next most probable token",
+      "Scene 3: Fluency vs Truth: Grammar is prioritized over factual verification",
+      "Scene 4: The hallucination snowball: Once one fake token is emitted, the rest follow logically",
+      "Scene 5: How ground-truth RAG and citation grounding fix it"
+    ],
+    tokenTie: "Connects token probability distributions to the hallucination dilemma.",
+    rewatch: "96% (Crucial mental model for every AI user)",
+    tag: "Hallucinations, TruthInAI, AutoRegressive"
+  },
+  {
+    day: "Day 11",
+    category: "future",
+    title: "Special Tokens: How AI Calls Tools and Runs Code",
+    hook: "ChatGPT can't do math in its head, but it can run Python in a sandbox. How does a text model trigger real software?",
+    visual: "The token stream emitting `<tool_call>`, pausing generation, running a Python script, and injecting `<tool_response>` tokens.",
+    scenes: [
+      "Scene 1: The special reserved tokens in the vocabulary (EOS, BOS, Tool Call)",
+      "Scene 2: Model outputs: `<call:calculator(1234*5678)>`",
+      "Scene 3: Server interrupts generation and executes the code",
+      "Scene 4: Result feeds right back into the context window as new tokens",
+      "Scene 5: Why Agentic AI is just special token sequences"
+    ],
+    tokenTie: "Builds on Day 1's concept of special reserved vocabulary tokens.",
+    rewatch: "97% (Opens the door to autonomous AI agents)",
+    tag: "ToolCalling, AIAgents, MCP"
+  },
+  {
+    day: "Day 12",
+    category: "practical",
+    title: "Quantization: Fitting a 70GB Model on an 8GB Laptop",
+    hook: "How do developers run a massive 70-Billion parameter AI model on an ordinary MacBook? It's called Quantization.",
+    visual: "A high-precision 16-bit smooth color gradient downsampled to 4-bit discrete steps with virtually zero visible difference.",
+    scenes: [
+      "Scene 1: 70B parameters x 2 bytes (FP16) = 140 GB VRAM requirement",
+      "Scene 2: Rounding float32/16 numbers down to 4-bit integers (INT4/GGUF)",
+      "Scene 3: Memory footprint drops by 75% instantly",
+      "Scene 4: Side-by-side benchmark: 98% of the intelligence at 1/4 the size",
+      "Scene 5: How Ollama and llama.cpp run local models in seconds"
+    ],
+    tokenTie: "Explains how token weight matrices are compressed for hardware.",
+    rewatch: "95% (Essential knowledge for the open-source local AI movement)",
+    tag: "Quantization, GGUF, LocalLLM"
+  },
+  {
+    day: "Day 13",
+    category: "practical",
+    title: "RAG vs Fine-Tuning: The Open-Book Exam Analogy",
+    hook: "Fine-tuning is like going to medical school; RAG is like looking up the textbook during the open-book exam.",
+    visual: "Split screen: Slow expensive weight update (Fine-tuning) vs Fast search & context injection (RAG).",
+    scenes: [
+      "Scene 1: The enterprise dilemma: How to feed private docs into AI",
+      "Scene 2: Fine-tuning: Rewriting model synapse weights (expensive, prone to forgetting)",
+      "Scene 3: RAG: Searching vector DB, pulling 3 paragraphs into the context window",
+      "Scene 4: When to use RAG (facts, freshness) vs Fine-Tuning (tone, format)",
+      "Scene 5: The winning hybrid strategy used by Fortune 500s"
+    ],
+    tokenTie: "Shows how external documents become tokens in the prompt budget.",
+    rewatch: "94% (Highest business value for tech leads & founders)",
+    tag: "RAG, FineTuning, EnterpriseAI"
+  },
+  {
+    day: "Day 14",
+    category: "future",
+    title: "Reasoning Models: Why o1 & DeepSeek-R1 'Think' First",
+    hook: "Why do new reasoning models say 'Thinking for 14 seconds...' before answering? Look at their hidden tokens.",
+    visual: "Scratchpad thought tokens generating in fast-forward, backtracking on errors, and verifying math before emitting the final answer.",
+    scenes: [
+      "Scene 1: Standard LLMs guess the next token instantly (System 1 fast thinking)",
+      "Scene 2: Reasoning models allocate test-time compute (System 2 deliberate thinking)",
+      "Scene 3: Peeking into the hidden Chain-of-Thought (CoT) tokens",
+      "Scene 4: Self-correction: 'Wait, that formula is wrong, let me retry...'",
+      "Scene 5: Why test-time compute is replacing training compute scaling"
+    ],
+    tokenTie: "Shows tokens being used as internal scratchpad memory.",
+    rewatch: "99% (Hottest trend in frontier AI research right now)",
+    tag: "ReasoningModels, DeepSeekR1, TestTimeCompute"
+  },
+  {
+    day: "Day 15",
+    category: "future",
+    title: "Vision Tokenization: How AI Models 'See' Images",
+    hook: "How does GPT-4o 'see' a photo? It doesn't have biological eyes—it chops your image into a puzzle grid of tokens.",
+    visual: "A picture of a dog sliced into 16x16 pixel patches. Each patch flattens into a 1D vector and enters the transformer alongside text.",
+    scenes: [
+      "Scene 1: Vision Transformers (ViT) architecture in 10 seconds",
+      "Scene 2: Cutting images into 16x16 patches",
+      "Scene 3: Linear projection: Turning image patches into patch tokens",
+      "Scene 4: Image tokens + Text tokens processing in the same attention matrix",
+      "Scene 5: Why high-res images burn through context window budgets"
+    ],
+    tokenTie: "The multimodal evolution of Day 1's text tokenization.",
+    rewatch: "97% (Visually stunning, mind-opening concept)",
+    tag: "VisionTransformers, Multimodal, ImageTokens"
+  },
+  {
+    day: "Day 16",
+    category: "quirks",
+    title: "Glitch Tokens: The Mystery Words That Break ChatGPT",
+    hook: "There are forbidden words inside ChatGPT's vocabulary that make it glitch, crash, or speak in demonic tongues.",
+    visual: "The token list highlighting 'SolidGoldMagikarp' and 'StreamerBot'. Asking GPT to repeat them causes bizarre malfunction.",
+    scenes: [
+      "Scene 1: Unsupervised tokenizer scraping Reddit usernames and unmoderated forums",
+      "Scene 2: Words that got reserved token IDs but ZERO training data during pretraining",
+      "Scene 3: The embedding vector for 'SolidGoldMagikarp' sits at [0,0,0] coordinates",
+      "Scene 4: The model has no idea what to do, triggering bizarre evasive replies",
+      "Scene 5: How modern post-training cleans tokenizer dictionaries"
+    ],
+    tokenTie: "Direct consequence of unsupervised BPE vocab creation from Day 1.",
+    rewatch: "99% (Pure viral intrigue and internet lore)",
+    tag: "GlitchTokens, SolidGoldMagikarp, AISecrets"
+  },
+  {
+    day: "Day 17",
+    category: "core",
+    title: "Top-P vs Top-K: The Filters That Stop AI Gibberish",
+    hook: "You know Temperature, but what do Top-K and Top-P actually do? Here is the simple filter trick that prevents AI nonsense.",
+    visual: "Sorted probability tail. Top-K chops off everything after top 50; Top-P (Nucleus) sums probabilities to 0.9 and snips the rest.",
+    scenes: [
+      "Scene 1: The long tail of low-probability hallucinated tokens",
+      "Scene 2: Top-K: Fixed cutoff (keeps exactly K tokens)",
+      "Scene 3: Top-P (Nucleus Sampling): Dynamic cutoff based on cumulative confidence",
+      "Scene 4: Why Top-P adapts dynamically when the model is confident vs unsure",
+      "Scene 5: The golden preset: Temp 0.7, Top-P 0.9 for creative writing"
+    ],
+    tokenTie: "The final step in turning token probabilities into clean text.",
+    rewatch: "93% (Completes the model generation loop)",
+    tag: "TopP, TopK, Sampling"
+  }
+];
+
+// Render Ideas Grid
+const grid = document.getElementById("ideasGrid");
+function renderIdeas(items) {
+  if (items.length === 0) {
+    grid.innerHTML = '<li style="grid-column:1/-1; text-align:center; padding:40px; color:var(--muted);">No matching ideas found.</li>';
+    return;
+  }
+  grid.innerHTML = items.map(item => `
+    <li class="idea-card" data-category="${item.category}">
+      <div class="idea-top">
+        <div class="idea-header">
+          <span class="day-badge">${item.day}</span>
+          <span class="pillar-badge">${item.tag.split(",")[0]}</span>
+        </div>
+        <h3 class="idea-title">${item.title}</h3>
+        <div class="idea-hook">"${item.hook}"</div>
+        <div class="idea-section-label">🎬 Visual Mental Model</div>
+        <p class="idea-visual">${item.visual}</p>
+        <div class="idea-section-label">📋 Scene Breakdown (45s)</div>
+        <ul class="scene-list">
+          ${item.scenes.map(s => `<li>${s}</li>`).join("")}
+        </ul>
+        <div class="token-tie">
+          <strong>🔗 Token Tie-in:</strong> ${item.tokenTie}
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="rewatch-score">🔄 Rewatch: ${item.rewatch}</span>
+        <button class="copy-btn" onclick="copyPrompt('${item.day}: ${item.title.replace(/'/g, "\\'")}')">📋 Copy Pitch</button>
+      </div>
+    </li>
+  `).join("");
+}
+
+// Copy prompt helper
+window.copyPrompt = function(title) {
+  navigator.clipboard.writeText(title);
+  alert("Copied to clipboard: " + title);
+};
+
+// Filter & Search Logic
+let currentFilter = "all";
+const filterButtons = document.querySelectorAll(".filter-btn");
+const searchInput = document.getElementById("searchIdeas");
+
+function applyFilters() {
+  const query = searchInput.value.toLowerCase().trim();
+  const filtered = ideas.filter(idea => {
+    const matchesCat = (currentFilter === "all") || (idea.category === currentFilter);
+    const matchesSearch = !query ||
+      idea.title.toLowerCase().includes(query) ||
+      idea.hook.toLowerCase().includes(query) ||
+      idea.visual.toLowerCase().includes(query) ||
+      idea.tag.toLowerCase().includes(query);
+    return matchesCat && matchesSearch;
+  });
+  renderIdeas(filtered);
+}
+
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+searchInput.addEventListener("input", applyFilters);
+
+// Initial Render
+renderIdeas(ideas);
+
+// Interactive Tokenizer Simulation
+const sampleInput = document.getElementById("sampleText");
+const tokenOutput = document.getElementById("tokenOutput");
+const charCount = document.getElementById("charCount");
+const tokenCount = document.getElementById("tokenCount");
+const ratio = document.getElementById("ratio");
+
+function mockTokenize(text) {
+  if (!text) return [];
+  // Approximate BPE subword segmentation
+  const words = text.match(/\S+|\s+/g) || [];
+  const tokens = [];
+  let baseId = 1842;
+  
+  words.forEach(chunk => {
+    if (chunk === "strawberry") {
+      tokens.push({ text: "straw", id: 31844 });
+      tokens.push({ text: "berry", id: 18921 });
+    } else if (chunk === "tokenization") {
+      tokens.push({ text: "token", id: 11241 });
+      tokens.push({ text: "ization", id: 3912 });
+    } else if (chunk.length > 7 && !chunk.includes(" ")) {
+      // Split into 2 subwords
+      const mid = Math.floor(chunk.length / 2);
+      tokens.push({ text: chunk.slice(0, mid), id: (baseId += 137) % 50000 });
+      tokens.push({ text: chunk.slice(mid), id: (baseId += 249) % 50000 });
+    } else {
+      tokens.push({ text: chunk, id: (baseId += 93) % 50000 });
+    }
+  });
+  return tokens;
+}
+
+function updateTokenizer() {
+  const text = sampleInput.value;
+  const tokens = mockTokenize(text);
+  charCount.textContent = text.length;
+  tokenCount.textContent = tokens.length;
+  ratio.textContent = tokens.length ? (text.length / tokens.length).toFixed(2) + " char/token" : "0";
+  
+  tokenOutput.innerHTML = tokens.map(tok => `
+    <span class="token-chip">
+      <span>${tok.text === " " ? "&middot;" : tok.text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</span>
+      <span class="token-id">#${tok.id}</span>
+    </span>
+  `).join("");
+}
+
+sampleInput.addEventListener("input", updateTokenizer);
+updateTokenizer();
+</script>
+
+</body>
+</html>

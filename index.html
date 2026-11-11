@@ -32,6 +32,34 @@
   .meta { display:flex; justify-content:space-between; gap:8px; align-items:center; font-size:.82rem; color:var(--muted); }
   .meta .track { flex:1; }
   .links { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:12px; font-size:.88rem; }
+  .featured-banner {
+    background: linear-gradient(135deg, rgba(99,102,241,0.14), rgba(236,72,153,0.09));
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 24px 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .featured-banner h3 { margin: 0 0 6px; font-size: 1.25rem; }
+  .featured-banner p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  .featured-btn {
+    background: var(--accent);
+    color: #fff !important;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 8px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s ease;
+  }
+  .featured-btn:hover { transform: translateY(-1px); }
   footer { margin-top:40px; color:var(--muted); font-size:.95rem; }
 </style>
 </head>
@@ -39,6 +67,15 @@
 <main>
   <h1>🤖 Most Followed AI Topics</h1>
   <p class="sub">What people keep up with and watch in AI — with 3 top ideas to follow in each.</p>
+
+  <div class="featured-banner">
+    <div>
+      <span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent);">🔥 Featured Short &amp; Video Series</span>
+      <h3>How LLMs Actually Read (Tokenization) + 16 Follow-Up Ideas</h3>
+      <p>Breakdown of the 47s viral Short on tokenization mechanics, plus 16 high-retention video concepts ready to produce.</p>
+    </div>
+    <a href="tokenization-series.html" class="featured-btn">Explore Series &amp; 16 Ideas &rarr;</a>
+  </div>
 
   <h2 class="sec">📊 Interest around each topic</h2>
   <div class="panel">
@@ -55,6 +92,7 @@
 <script>
 const topics = [
   { e:"🧠", n:"Large Language Models", r:"LocalLLaMA", s:96, d:"New releases and benchmarks from the big labs.",
+    deepDive: "tokenization-series.html", deepDiveTitle: "🎬 Video Deep Dive & 16 Follow-Ups",
     i:["Frontier model launches and leaderboards","Reasoning models that think before answering","Smaller, cheaper models that rival big ones"] },
   { e:"🦾", n:"AI Agents", r:"AI_Agents", s:94, d:"Software that plans, uses tools and finishes tasks.",
     i:["Computer-use and browser agents","Multi-agent workflows","MCP and tool-connected assistants"] },
@@ -99,7 +137,12 @@ document.getElementById("cards").innerHTML = topics.map(t =>
   `<li class="panel card"><h3>${t.e} ${esc(t.n)}</h3><p class="desc">${esc(t.d)}</p>
    <ol>${t.i.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
    <div class="meta"><span>Interest ${t.s}</span><div class="track"><div class="bar" style="width:${t.s}%"></div></div></div>
-   <div class="links"><a href="${yt(t.n)}" target="_blank" rel="noopener">▶️ YouTube</a><a href="${rd(t)}" target="_blank" rel="noopener">👽 r/${t.r}</a><a href="${trends(t.n)}" target="_blank" rel="noopener">📈 Trends</a></div></li>`
+   <div class="links">
+     ${t.deepDive ? `<a href="${t.deepDive}" style="color:var(--accent2); font-weight:600;">${t.deepDiveTitle}</a>` : ''}
+     <a href="${yt(t.n)}" target="_blank" rel="noopener">▶️ YouTube</a>
+     <a href="${rd(t)}" target="_blank" rel="noopener">👽 r/${t.r}</a>
+     <a href="${trends(t.n)}" target="_blank" rel="noopener">📈 Trends</a>
+   </div></li>`
 ).join("");
 </script>
 </body>
