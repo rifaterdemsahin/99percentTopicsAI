@@ -31,6 +31,7 @@
   .card li { margin:3px 0; }
   .meta { display:flex; justify-content:space-between; gap:8px; align-items:center; font-size:.82rem; color:var(--muted); }
   .meta .track { flex:1; }
+  .links { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:12px; font-size:.88rem; }
   footer { margin-top:40px; color:var(--muted); font-size:.95rem; }
 </style>
 </head>
@@ -42,7 +43,7 @@
   <h2 class="sec">📊 Interest around each topic</h2>
   <div class="panel">
     <div id="chart"></div>
-    <p class="note">Interest is an <strong>editorial estimate</strong> (0–100, relative), not measured data. For live numbers, use the 📈 Trends link on each card.</p>
+    <p class="note">Interest is an <strong>editorial estimate</strong> (0–100, relative), not measured data. For live numbers, use the ▶️ YouTube, 👽 Reddit and 📈 Trends links on each card.</p>
   </div>
 
   <h2 class="sec">🔥 Topics &amp; top ideas</h2>
@@ -53,39 +54,41 @@
 
 <script>
 const topics = [
-  { e:"🧠", n:"Large Language Models", s:96, d:"New releases and benchmarks from the big labs.",
+  { e:"🧠", n:"Large Language Models", r:"LocalLLaMA", s:96, d:"New releases and benchmarks from the big labs.",
     i:["Frontier model launches and leaderboards","Reasoning models that think before answering","Smaller, cheaper models that rival big ones"] },
-  { e:"🦾", n:"AI Agents", s:94, d:"Software that plans, uses tools and finishes tasks.",
+  { e:"🦾", n:"AI Agents", r:"AI_Agents", s:94, d:"Software that plans, uses tools and finishes tasks.",
     i:["Computer-use and browser agents","Multi-agent workflows","MCP and tool-connected assistants"] },
-  { e:"💻", n:"AI Coding Assistants", s:92, d:"Writing and shipping code with AI.",
+  { e:"💻", n:"AI Coding Assistants", r:"ChatGPTCoding", s:92, d:"Writing and shipping code with AI.",
     i:["Agentic coding in the terminal and IDE","Vibe coding for non-developers","AI code review and testing"] },
-  { e:"🎨", n:"Generative Image & Video", s:88, d:"Text-to-image, text-to-video and editing.",
+  { e:"🎨", n:"Generative Image & Video", r:"StableDiffusion", s:88, d:"Text-to-image, text-to-video and editing.",
     i:["Realistic text-to-video","Consistent characters across scenes","AI-assisted filmmaking and design"] },
-  { e:"🔓", n:"Open-Source Models", s:82, d:"Open weights you can run and tweak yourself.",
+  { e:"🔓", n:"Open-Source Models", r:"LocalLLaMA", s:82, d:"Open weights you can run and tweak yourself.",
     i:["Running models locally on laptops","Open vs closed model gap","Fine-tuning for your own data"] },
-  { e:"💼", n:"AI Jobs & Future of Work", s:85, d:"How AI changes roles and productivity.",
+  { e:"💼", n:"AI Jobs & Future of Work", r:"singularity", s:85, d:"How AI changes roles and productivity.",
     i:["Which jobs are most affected","Upskilling and new AI roles","Productivity gains for solo founders"] },
-  { e:"🛡️", n:"AI Safety & Alignment", s:70, d:"Making powerful AI behave as intended.",
+  { e:"🛡️", n:"AI Safety & Alignment", r:"ControlProblem", s:70, d:"Making powerful AI behave as intended.",
     i:["Interpretability research","Evals and red-teaming","The AGI timeline debate"] },
-  { e:"⚖️", n:"Regulation & Policy", s:72, d:"Laws, courts and government rules.",
+  { e:"⚖️", n:"Regulation & Policy", r:"artificial", s:72, d:"Laws, courts and government rules.",
     i:["EU AI Act implementation","Copyright lawsuits over training data","Chip export controls"] },
-  { e:"🔌", n:"AI Hardware & Chips", s:80, d:"The compute behind the boom.",
+  { e:"🔌", n:"AI Hardware & Chips", r:"nvidia", s:80, d:"The compute behind the boom.",
     i:["GPU and custom chip competition","Data center and energy demand","On-device AI chips"] },
-  { e:"✍️", n:"Prompting & RAG", s:75, d:"Getting better results from models.",
+  { e:"✍️", n:"Prompting & RAG", r:"PromptEngineering", s:75, d:"Getting better results from models.",
     i:["Context engineering","Retrieval-augmented generation","Evaluating and fine-tuning prompts"] },
-  { e:"🤝", n:"Robotics & Embodied AI", s:68, d:"AI in the physical world.",
+  { e:"🤝", n:"Robotics & Embodied AI", r:"robotics", s:68, d:"AI in the physical world.",
     i:["Humanoid robots","Self-driving vehicles","Robot learning from video"] },
-  { e:"🧬", n:"AI in Science & Health", s:66, d:"Discovery and medicine accelerated by AI.",
+  { e:"🧬", n:"AI in Science & Health", r:"MachineLearning", s:66, d:"Discovery and medicine accelerated by AI.",
     i:["Protein and drug discovery","Medical imaging and diagnosis","AI research assistants for scientists"] },
-  { e:"💰", n:"AI Startups & Funding", s:74, d:"Money, valuations and market bets.",
+  { e:"💰", n:"AI Startups & Funding", r:"artificial", s:74, d:"Money, valuations and market bets.",
     i:["Mega funding rounds","Is there an AI bubble?","Big-tech acquisitions and partnerships"] },
-  { e:"🎭", n:"Deepfakes & Misinformation", s:62, d:"Synthetic media and how to spot it.",
+  { e:"🎭", n:"Deepfakes & Misinformation", r:"deepfakes", s:62, d:"Synthetic media and how to spot it.",
     i:["Voice cloning scams","Detection and watermarking","Election and news integrity"] },
-  { e:"🎓", n:"AI in Education", s:64, d:"Learning, teaching and cheating with AI.",
+  { e:"🎓", n:"AI in Education", r:"ChatGPT", s:64, d:"Learning, teaching and cheating with AI.",
     i:["Personal AI tutors","Rules for AI use in schools","Teaching AI literacy"] }
 ].sort((a,b)=>b.s-a.s);
 
 const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const yt = n => "https://www.youtube.com/results?search_query=" + encodeURIComponent(n.replace(/&/g,"and") + " AI");
+const rd = t => "https://www.reddit.com/r/" + t.r + "/search/?q=" + encodeURIComponent(t.n.replace(/&/g,"and")) + "&restrict_sr=1&sort=top&t=month";
 const trends = n => "https://trends.google.com/trends/explore?q=" + encodeURIComponent(n.replace(/&/g,"and"));
 
 document.getElementById("chart").innerHTML = topics.map(t =>
@@ -95,7 +98,8 @@ document.getElementById("chart").innerHTML = topics.map(t =>
 document.getElementById("cards").innerHTML = topics.map(t =>
   `<li class="panel card"><h3>${t.e} ${esc(t.n)}</h3><p class="desc">${esc(t.d)}</p>
    <ol>${t.i.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
-   <div class="meta"><span>Interest ${t.s}</span><div class="track"><div class="bar" style="width:${t.s}%"></div></div><a href="${trends(t.n)}" target="_blank" rel="noopener">📈 Trends</a></div></li>`
+   <div class="meta"><span>Interest ${t.s}</span><div class="track"><div class="bar" style="width:${t.s}%"></div></div></div>
+   <div class="links"><a href="${yt(t.n)}" target="_blank" rel="noopener">▶️ YouTube</a><a href="${rd(t)}" target="_blank" rel="noopener">👽 r/${t.r}</a><a href="${trends(t.n)}" target="_blank" rel="noopener">📈 Trends</a></div></li>`
 ).join("");
 </script>
 </body>
